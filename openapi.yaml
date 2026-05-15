@@ -1,0 +1,157 @@
+openapi: 3.0.0
+info:
+  title: Fraud Check Engine API
+  description: Motor de detecção e prevenção de fraude em transações
+  version: 1.0.0
+  contact:
+    name: Equipe Cartões de Crédito
+    email: cartoes-credito@zetra-bank.com
+
+servers:
+  - url: https://api.zetra-bank.com/fraud-check
+    description: Production
+
+paths:
+  /fraud-check:
+    post:
+      summary: Verificar fraude em uma transação
+      operationId: checkTransactionFraud
+      tags:
+        - Fraud Detection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                transactionId:
+                  type: string
+                cardId:
+                  type: string
+                amount:
+                  type: number
+                merchant:
+                  type: string
+                location:
+                  type: object
+                  properties:
+                    latitude:
+                      type: number
+                    longitude:
+                      type: number
+      responses:
+        '200':
+          description: Resultado da análise de fraude
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactionId:
+                    type: string
+                  riskScore:
+                    type: number
+                    minimum: 0
+                    maximum: 100
+                  isFraud:
+                    type: boolean
+                  riskLevel:
+                    type: string
+                    enum: [LOW, MEDIUM, HIGH, CRITICAL]
+
+  /fraud-check/{transactionId}:
+    get:
+      summary: Consultar resultado de análise de fraude
+      operationId: getFraudCheckResult
+      tags:
+        - Fraud Detection
+      parameters:
+        - name: transactionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalhes da análise
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactionId:
+                    type: string
+                  riskScore:
+                    type: number
+                  isFraud:
+                    type: boolean
+                  rulesTriggered:
+                    type: array
+                    items:
+                      type: string
+                  timestamp:
+                    type: string
+                    format: date-time
+
+  /fraud-rules:
+    get:
+      summary: Listar regras de fraude ativas
+      operationId: listFraudRules
+      tags:
+        - Fraud Rules
+      responses:
+        '200':
+          description: Lista de regras
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    ruleId:
+                      type: string
+                    ruleName:
+                      type: string
+                    description:
+                      type: string
+                    severity:
+                      type: string
+                      enum: [LOW, MEDIUM, HIGH, CRITICAL]
+                    active:
+                      type: boolean
+
+    post:
+      summary: Criar nova regra de fraude
+      operationId: createFraudRule
+      tags:
+        - Fraud Rules
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ruleName:
+                  type: string
+                description:
+                  type: string
+                condition:
+                  type: string
+                severity:
+                  type: string
+                  enum: [LOW, MEDIUM, HIGH, CRITICAL]
+      responses:
+        '201':
+          description: Regra criada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ruleId:
+                    type: string
+                  status:
+                    type: string
