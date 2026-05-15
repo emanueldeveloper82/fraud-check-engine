@@ -3,6 +3,8 @@ kind: Component
 metadata:
   name: fraud-check-engine
   description: API para gestão de limites / Motor de fraude
+  annotations:
+    backstage.io/api-docs-ref: file: ./openapi.yaml
 spec:
   type: service
   lifecycle: production
