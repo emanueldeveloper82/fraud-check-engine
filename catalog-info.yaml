@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: fraud-check-engine
+  description: API para gestão de limites / Motor de fraude
+spec:
+  type: service
+  lifecycle: production
+  owner: cartoes-credito
+  system: titan-authorization # Usando o sistema que já aparece nos seus logs
