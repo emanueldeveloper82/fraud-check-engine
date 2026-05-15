@@ -3,10 +3,25 @@ kind: Component
 metadata:
   name: fraud-check-engine
   description: API para gestão de limites / Motor de fraude
-  annotations:
-    backstage.io/api-docs-ref: file: ./openapi.yaml
 spec:
   type: service
   lifecycle: production
   owner: group:cartoes-credito
+  domain: financeiro
   system: system:card-services
+  providesApis:
+    - fraud-check-engine
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: fraud-check-engine
+  description: "Especificação OpenAPI do Fraud Check Engine"
+spec:
+  type: openapi
+  lifecycle: production
+  owner: group:cartoes-credito
+  system: system:card-services
+  definition:
+    $text: ./openapi.yaml
