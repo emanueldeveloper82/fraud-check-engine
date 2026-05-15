@@ -6,5 +6,5 @@ metadata:
 spec:
   type: service
   lifecycle: production
-  owner: cartoes-credito
-  system: titan-authorization # Usando o sistema que já aparece nos seus logs
+  owner: group:cartoes-credito
+  system: system:card-services
